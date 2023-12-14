@@ -1,3 +1,10 @@
+"""
+Author: Andrew McKasson
+Date: 12/13/23
+Program: Andrew's Health App
+Version: 1.0
+Goal: A python GUI that helps users track and manage their workouts.
+"""
 from tkinter import *
 from tkinter import messagebox
 
@@ -67,22 +74,22 @@ class HealthApp:
         e.grid(row=8, column=1, padx=10, pady=10) # where its placed
 
         # Buttons
-        button_summary = Button(root, text="Daily Report", padx=10, pady=10, command=self.open_summary_window)
+        button_dailyReport = Button(root, text="Daily Report", padx=10, pady=10, command=self.open_dailyReport_window)
         button_clear = Button(root, text="Clear", padx=10, pady=10, command=self.button_clear)
         button_save = Button(root, text="Save", padx=10, pady=10, command=self.button_save)
         button_exit = Button(root, text="Exit", padx=10, pady=10, command=self.button_exit)
         
         
         # Put the buttons on the screen
-        button_summary.grid(row=12, column=1)
+        button_dailyReport.grid(row=12, column=1)
         button_clear.grid(row=12, column=2)
         button_save.grid(row=12, column=3)
         button_exit.grid(row=12, column=4)
 
     # Create a function for a new window for the daily report. Its a user report that shows info before you save it to a file.
-    def open_summary_window(self):
-        summary_window = Toplevel(self.root)
-        summary_window.title("Daily Report")
+    def open_dailyReport_window(self):
+        dailyReport_window = Toplevel(self.root)
+        dailyReport_window.title("Daily Report")
 
         try:
             weight = int(self.weight_var.get())  #using accessor methods to get info
@@ -96,7 +103,7 @@ class HealthApp:
             summary += f"Calories Burned: {caloriesBurned} calories\n"  #using a format string to display info
             summary += f"Workout Type: {self.workoutType_var.get()}\n"  #using a format string to display info
             summary += f"Remaining Calories: {caloriesRemaining} calories"  #using a format string to display info
-            label_summary = Label(summary_window, text=summary)
+            label_summary = Label(dailyReport_window, text=summary)
             label_summary.pack()
         except ValueError:
             messagebox.showerror("Error", "Enter information in all fields. Enter integers for weight, calorie goal, and calories burned.")   # secure coding, this is what will show if summary failed
@@ -112,14 +119,14 @@ class HealthApp:
 
     #created a function for save button, it gets the info and converts it to a string then appends it to a text file created intially the first time a save is successful
     def button_save(self):
-        try:
+        try:  #using try except to catch code errors
             # Gather workout and user info
-            name = self.name_var.get() #using an accessor method to gather info on name
-            date = self.date_var.get() #using an accessor method to gather info on date 
-            weight = int(self.weight_var.get()) #using an accessor method to gather info on weight 
-            calorieGoal = int(self.calorieGoal_var.get()) #using an accessor method to gather info on the calorie goal
-            caloriesBurned = int(self.caloriesBurned_var.get()) #using an accessor method to gather info on the calories burned
-            workoutType = self.workoutType_var.get() #using an accessor method to gather info on the type of workouts user did
+            name = self.name_var.get() #using an get to gather info on name
+            date = self.date_var.get() #using an get to gather info on date 
+            weight = int(self.weight_var.get()) #using get to gather info on weight 
+            calorieGoal = int(self.calorieGoal_var.get()) #using get to gather info on the calorie goal
+            caloriesBurned = int(self.caloriesBurned_var.get()) #using get to gather info on the calories burned
+            workoutType = self.workoutType_var.get() #using an get to gather info on the type of workouts user did
 
             # calories remaining
             caloriesRemaining = caloriesBurned - calorieGoal 
@@ -128,14 +135,15 @@ class HealthApp:
             savedInfo = f"Name: {name}\nDate: {date}\nWeight: {weight} lbs\nCalorie Goal: {calorieGoal} calories\nCalories Burned: {caloriesBurned} calories\nWorkout Type: {workoutType}\nRemaining Calories: {caloriesRemaining} calories\n\n"
 
             # Open a file in append mode and add workout info
-            with open("health_data.txt", "a") as file:
+            with open("healthApp_save.txt", "a") as file: #used with statement to open file, it also closes the file after writing to it
                 file.write(savedInfo)
 
-            messagebox.showinfo("Save", "Your workout has been saved to a file.")  #utilizing the messagebox again to display save was not successful
-        except ValueError:
-            messagebox.showerror("Error", "Your workout was not saved, make sure the data you entered is correct.")  #using secure coding to show user if workout was not saved to file
+            messagebox.showinfo("Save", "Your workout has been saved to a file.")  #utilizing the messagebox to display save was successful
+        except ValueError:  #using try except to catch code errors
+            messagebox.showerror("Error", "Your workout was not saved, make sure the data you entered is correct. Enter integers for weight, calorie goal, and calories burned.")  #using secure coding to show user if workout was not saved to file
 
-    def button_exit(self):
+    #simple exit function that ends the program
+    def button_exit(self): 
     	self.root.destroy()
 
 
